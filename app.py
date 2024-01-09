@@ -6,6 +6,8 @@ from docx import Document
 import unicodedata
 import pandas as pd
 import time
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 # Configure file uploads
@@ -18,6 +20,20 @@ app.config['CLEANED_UPLOADS_FOLDER'] = 'cleaned_uploads'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def cleanup_old_files(folder, days=7):
+    now = datetime.now()
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        if os.path.isfile(file_path):
+            # Get the last modification time of the file
+            modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+            print(modified_time)
+            # Calculate the age of the file
+            age = now - modified_time
+            print(age)
+            # If the file is older than the specified days, delete it
+            if age > timedelta(days=days):
+                os.remove(file_path)
 
 def clean_transcripts(file_path):
     start_time = time.time()             
@@ -95,13 +111,18 @@ def clean_transcripts(file_path):
 
     return names, cleaned_filename
 
+
+
 @app.route('/')
 def index():
+    # Call the cleanup function before rendering the template    
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
     try:
+        # Call the cleanup function before processing the uploaded files
+        cleanup_old_files(app.config['CLEANED_UPLOADS_FOLDER'])
         # Check if the post request has the file part
         if 'file' not in request.files:
             return 'No file part'
@@ -156,17 +177,6 @@ def download_cleaned(filename):
     cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
     print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
     return send_from_directory(cleaned_uploads, filename)
-
-@app.route('/delete_cleaned/<path:filename>', methods=['POST'])
-def delete_cleaned(filename):
-    cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
-    file_path = os.path.join(cleaned_uploads, filename)
-
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        return jsonify({"message": f"File {filename} deleted successfully"})
-    else:
-        return jsonify({"message": f"File {filename} not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

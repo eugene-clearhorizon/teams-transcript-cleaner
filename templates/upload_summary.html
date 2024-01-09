@@ -20,50 +20,12 @@
                 <strong>Speakers:</strong> {{ file_info['names'] }}<br>
                 <br>
                 <!-- Add a download link for each file -->
-                <a href="#" onclick="downloadAndDelete('{{ file_info['filename'] }}')">Download {{ file_info['filename'] }}</a>
-
+                <a href="{{ url_for('download_cleaned', filename=file_info['filename']) }}" download="{{ file_info['filename'] }}">Download {{ file_info['filename'] }}</a>
                 <br>
                 <br>
             </li>
         {% endfor %}
     </ul>
 
-    <script>
-        function downloadAndDelete(filename) {
-            // Create a temporary link element for initiating the download
-            const link = document.createElement('a');
-            link.href = `/cleaned_uploads/${filename}`;
-            link.download = '';
-            document.body.appendChild(link);
-
-            // Simulate a click on the link to trigger the download
-            link.click();
-
-            // Remove the download attribute to prevent automatic download
-            link.removeAttribute('download');
-
-            // Remove the link after a short delay (adjust the delay as needed)
-            setTimeout(() => {
-                document.body.removeChild(link);
-
-                // Make an asynchronous request to the server to delete the file
-                fetch(`/delete_cleaned/${filename}`, {
-                    method: 'POST',
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to delete file: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }, 5000); // 1000 milliseconds (adjust as needed)
-        }
-    </script>
 </body>
 </html>
