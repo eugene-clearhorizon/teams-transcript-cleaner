@@ -21,6 +21,10 @@ def allowed_file(filename):
 def clean_transcripts(file_path):
     start_time = time.time()             
     
+    cleaned_uploads_dir = 'cleaned_uploads'
+    if not os.path.exists(cleaned_uploads_dir):
+        os.makedirs(cleaned_uploads_dir)
+
     ### imports a word document and returns it as a single string
     # Create a Document object from the file
     doc = Document(file_path)
@@ -81,7 +85,9 @@ def clean_transcripts(file_path):
         else:
             paragraph.add_run(f"{i} ")
     # save the document with a given file name
-    new_doc.save(f"cleaned_{file_path}")
+    cleaned_filename = f"cleaned_{os.path.basename(file_path)}"
+    new_doc.save(os.path.join('cleaned_uploads', cleaned_filename))        
+    
     print(f"--- {(time.time() - start_time)} seconds ---")
 
     return names
