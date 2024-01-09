@@ -13,6 +13,7 @@ app = Flask(__name__)
 ALLOWED_EXTENSIONS = {'docx'}
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
+app.config['CLEANED_UPLOADS_FOLDER'] = 'cleaned_uploads'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -90,7 +91,7 @@ def clean_transcripts(file_path):
     
     print(f"--- {(time.time() - start_time)} seconds ---")
 
-    return names
+    return names, cleaned_filename
 
 @app.route('/')
 def index():
@@ -124,14 +125,18 @@ def upload_files():
                 file_path = os.path.join(uploads_dir, filename)
                 file.save(file_path)
 
-                # Measure the time taken to clean transcripts for each file
+                # Measure the time taken to clean transcripts for each file                
                 start_time = time.time()
-                names = clean_transcripts(file_path)
-                processing_time = time.time() - start_time                
+                names, cleaned_filename = clean_transcripts(file_path)
+                processing_time = time.time() - start_time
+
+                # Move the cleaned file to the 'cleaned_uploads' directory
+                cleaned_path = os.path.join(app.config['CLEANED_UPLOADS_FOLDER'], cleaned_filename)
+                os.rename(file_path, cleaned_path)          
 
                 # Collect information about each file
                 file_info = {
-                    'filename': filename,
+                    'filename': cleaned_filename,
                     'names': names,
                     'processing_time': processing_time
                 }
@@ -144,10 +149,10 @@ def upload_files():
     except Exception as e:
         return f'An error occurred: {str(e)}'
 
-@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
-def download(filename):
-    uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
-    return send_from_directory(uploads, filename)
+@app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
+def download_cleaned(filename):
+    cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+    return send_from_directory(cleaned_uploads, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
