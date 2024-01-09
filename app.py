@@ -87,7 +87,9 @@ def clean_transcripts(file_path):
             paragraph.add_run(f"{i} ")
     # save the document with a given file name
     cleaned_filename = f"cleaned_{os.path.basename(file_path)}"
-    new_doc.save(os.path.join('cleaned_uploads', cleaned_filename))        
+    new_doc.save(os.path.join('cleaned_uploads', cleaned_filename))
+
+    os.remove(file_path)        
     
     print(f"--- {(time.time() - start_time)} seconds ---")
 
@@ -132,8 +134,7 @@ def upload_files():
 
                 # Move the cleaned file to the 'cleaned_uploads' directory
                 cleaned_path = os.path.join(app.config['CLEANED_UPLOADS_FOLDER'], cleaned_filename)
-                os.rename(file_path, cleaned_path)          
-
+                
                 # Collect information about each file
                 file_info = {
                     'filename': cleaned_filename,
@@ -153,8 +154,21 @@ def upload_files():
 @app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
 def download_cleaned(filename):
     cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
-    print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
-    return send_from_directory(cleaned_uploads, filename)
+    file_path = os.path.join(cleaned_uploads, filename)
+
+    # Send the file for download
+    response = send_from_directory(cleaned_uploads, filename)
+
+    # Remove the file after it has been sent for download
+    os.remove(file_path)
+
+    return response
+
+#@app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
+#def download_cleaned(filename):
+ #   cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+  #  print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
+   # return send_from_directory(cleaned_uploads, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
