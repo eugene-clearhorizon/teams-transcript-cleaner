@@ -144,11 +144,10 @@ def upload_files():
     except Exception as e:
         return f'An error occurred: {str(e)}'
 
-@app.route('/download/<filename>')
-def download_file(filename):
-    cleaned_path = os.path.join('cleaned_uploads', f"cleaned_{filename}")
-    print(f"Attempting to download file: {cleaned_path}")
-    return send_from_directory('cleaned_uploads', f"cleaned_{filename}")
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(uploads, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
