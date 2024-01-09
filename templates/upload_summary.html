@@ -1,0 +1,27 @@
+<!-- templates/upload_summary.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Summary</title>
+</head>
+<body>
+    <h1>Upload Summary</h1>
+    <p>{{ num_files }} files uploaded and processed.</p>
+
+    <h2>File Information:</h2>
+    <ul>
+        {% for file_info in file_info_list %}
+            <li>
+                <strong>File Name:</strong> {{ file_info['filename'] }}<br>
+                <br>
+                <strong>Speakers:</strong> {{ file_info['names'] }}<br>
+                <br>
+                <br>                
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
