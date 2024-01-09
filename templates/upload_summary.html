@@ -20,7 +20,8 @@
                 <strong>Speakers:</strong> {{ file_info['names'] }}<br>
                 <br>
                 <!-- Add a download link for each file -->
-                <a href="#" onclick="downloadAndDelete('{{ file_info['filename'] }}')">Download {{ file_info['filename'] }}</a>
+                <a href="#" onclick="downloadAndDelete('{{ file_info[\'filename\'] }}')">Download {{ file_info['filename'] }}</a>
+
                 <br>
                 <br>
             </li>
@@ -61,7 +62,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                 });
-            }, 1000); // 1000 milliseconds (adjust as needed)
+            }, 5000); // 1000 milliseconds (adjust as needed)
         }
     </script>
 </body>
