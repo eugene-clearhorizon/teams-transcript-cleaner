@@ -103,7 +103,7 @@ def clean_transcripts(file_path):
             paragraph.add_run(f"{i} ")
     # save the document with a given file name
     cleaned_filename = f"cleaned_{os.path.basename(file_path)}"
-    new_doc.save(os.path.join('cleaned_uploads', cleaned_filename))
+    new_doc.save(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'], cleaned_filename))
     
     os.remove(file_path)        
     
@@ -153,8 +153,15 @@ def upload_files():
                 names, cleaned_filename = clean_transcripts(file_path)
                 processing_time = time.time() - start_time
 
+                cleaned_uploads_dir = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+                if not os.path.exists(cleaned_uploads_dir):
+                    os.makedirs(cleaned_uploads_dir)
+
                 # Move the cleaned file to the 'cleaned_uploads' directory
-                cleaned_path = os.path.join(app.config['CLEANED_UPLOADS_FOLDER'], cleaned_filename)
+
+                
+                cleaned_path = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'], cleaned_filename)
+                
                 
                 # Collect information about each file
                 file_info = {
