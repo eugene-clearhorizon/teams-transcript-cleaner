@@ -146,9 +146,9 @@ def upload_files():
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    # Provide the path to the cleaned file for download
+    cleaned_path = os.path.join('cleaned_uploads', f"cleaned_{filename}")
+    print(f"Attempting to download file: {cleaned_path}")
     return send_from_directory('cleaned_uploads', f"cleaned_{filename}")
-
 
 if __name__ == '__main__':
     app.run(debug=True)
