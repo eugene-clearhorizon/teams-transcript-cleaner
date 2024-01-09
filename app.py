@@ -154,21 +154,19 @@ def upload_files():
 @app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
 def download_cleaned(filename):
     cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+    print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
+    return send_from_directory(cleaned_uploads, filename)
+
+@app.route('/delete_cleaned/<path:filename>', methods=['POST'])
+def delete_cleaned(filename):
+    cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
     file_path = os.path.join(cleaned_uploads, filename)
 
-    # Send the file for download
-    response = send_from_directory(cleaned_uploads, filename)
-
-    # Remove the file after it has been sent for download
-    os.remove(file_path)
-
-    return response
-
-#@app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
-#def download_cleaned(filename):
- #   cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
-  #  print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
-   # return send_from_directory(cleaned_uploads, filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return jsonify({"message": f"File {filename} deleted successfully"})
+    else:
+        return jsonify({"message": f"File {filename} not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
