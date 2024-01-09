@@ -144,10 +144,10 @@ def upload_files():
     except Exception as e:
         return f'An error occurred: {str(e)}'
 
-@app.route('/download/<filename>')
-def download_file(filename):
+#@app.route('/download/<filename>')
+#def download_file(filename):
     # Provide the path to the cleaned file for download
-    return send_from_directory('cleaned_uploads', f"cleaned_{filename}")
+ #   return send_from_directory('cleaned_uploads', f"cleaned_{filename}")
 
 
 if __name__ == '__main__':
