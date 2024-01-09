@@ -104,7 +104,7 @@ def clean_transcripts(file_path):
     # save the document with a given file name
     cleaned_filename = f"cleaned_{os.path.basename(file_path)}"
     new_doc.save(os.path.join('cleaned_uploads', cleaned_filename))
-
+    
     os.remove(file_path)        
     
     print(f"--- {(time.time() - start_time)} seconds ---")
@@ -174,7 +174,9 @@ def upload_files():
 
 @app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
 def download_cleaned(filename):
-    cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+    cleaned_uploads = 'cleaned_uploads'
+    print("PATHS")    
+    print("------")
     print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
     return send_from_directory(cleaned_uploads, filename)
 
