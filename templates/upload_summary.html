@@ -19,7 +19,10 @@
                 <br>
                 <strong>Speakers:</strong> {{ file_info['names'] }}<br>
                 <br>
-                <br>                
+                <!-- Add a download link for each file -->
+                <a href="{{ url_for('download_cleaned', filename=file_info['filename']) }}" download>Download {{ file_info['filename'] }}</a>
+                <br>
+                <br>
             </li>
         {% endfor %}
     </ul>

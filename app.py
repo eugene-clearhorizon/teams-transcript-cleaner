@@ -153,6 +153,7 @@ def upload_files():
 @app.route('/cleaned_uploads/<path:filename>', methods=['GET', 'POST'])
 def download_cleaned(filename):
     cleaned_uploads = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])
+    print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
     return send_from_directory(cleaned_uploads, filename)
 
 if __name__ == '__main__':
