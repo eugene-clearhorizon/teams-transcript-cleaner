@@ -144,6 +144,7 @@ def upload_files():
 
                 total_time += processing_time
                 num_files_uploaded += 1
+                print(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
 
         return render_template('upload_summary.html', num_files=num_files_uploaded, total_time=total_time, file_info_list=file_info_list)
     except Exception as e:

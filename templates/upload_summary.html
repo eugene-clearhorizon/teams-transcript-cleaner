@@ -23,16 +23,6 @@
             </li>
         {% endfor %}
     </ul>
-    <ul>
-        {% for file_info in file_info_list %}
-            <li>
-                <strong>File Name:</strong> {{ file_info['filename'] }}<br>
-                <strong>Speakers:</strong> {{ file_info['names'] }}<br>
-                <!-- Add a link to download the cleaned file -->
-                <a href="{{ url_for('download_file', filename=file_info['filename']) }}">Download Cleaned File</a><br>
-                <br>                
-            </li>
-        {% endfor %}
-    </ul>
+
 </body>
 </html>
