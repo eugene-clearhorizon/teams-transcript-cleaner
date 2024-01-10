@@ -20,7 +20,7 @@ app.config['CLEANED_UPLOADS_FOLDER'] = 'cleaned_uploads'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def cleanup_old_files(folder, days=7):
+def cleanup_old_files(folder, hours=1):
     now = datetime.now()
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
@@ -32,7 +32,7 @@ def cleanup_old_files(folder, days=7):
             age = now - modified_time
             print(age)
             # If the file is older than the specified days, delete it
-            if age > timedelta(days=days):
+            if age > timedelta(hours=hours):
                 os.remove(file_path)
 
 def clean_transcripts(file_path):
