@@ -22,14 +22,19 @@ def allowed_file(filename):
 
 def cleanup_old_files(folder, hours=1):
     now = datetime.now()
+    print("------")
+    print("Cleanup old files")
+    print(now)
     for filename in os.listdir(folder):
+        print(filename)
         file_path = os.path.join(folder, filename)
+        print(file_path)
         if os.path.isfile(file_path):
             # Get the last modification time of the file
             modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
             print(modified_time)
             # Calculate the age of the file
-            age = now - modified_time
+            age = now - modified_time            
             print(age)
             # If the file is older than the specified days, delete it
             if age > timedelta(hours=hours):
