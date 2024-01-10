@@ -22,9 +22,10 @@ def allowed_file(filename):
 
 def cleanup_old_files(folder, hours=1):
     now = datetime.now()
-    print("------")
+    print()
     print("Cleanup old files")
     print(now)
+    print(os.listdir(folder))
     for filename in os.listdir(folder):
         print(filename)
         file_path = os.path.join(folder, filename)
