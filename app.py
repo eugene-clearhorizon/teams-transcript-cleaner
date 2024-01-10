@@ -25,8 +25,8 @@ def cleanup_old_files(folder, hours=1):
     print()
     print("Cleanup old files")
     print(now)
-    print(os.listdir(folder))
-    for filename in os.listdir(folder):
+    print(os.listdir(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])))
+    for filename in os.listdir(folder = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])):
         print(filename)
         file_path = os.path.join(folder, filename)
         print(file_path)
