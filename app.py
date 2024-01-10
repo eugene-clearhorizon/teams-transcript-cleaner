@@ -25,8 +25,8 @@ def cleanup_old_files(folder, hours=1):
     print()
     print("Cleanup old files")
     print(now)
-    print(os.listdir(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])))
-    for filename in os.listdir(folder = os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER'])):
+    print(os.listdir(folder))    
+    for filename in os.listdir(folder):
         print(filename)
         file_path = os.path.join(folder, filename)
         print(file_path)
@@ -128,7 +128,7 @@ def index():
 def upload_files():
     try:
         # Call the cleanup function before processing the uploaded files
-        cleanup_old_files(app.config['CLEANED_UPLOADS_FOLDER'])
+        cleanup_old_files(os.path.join(current_app.root_path, app.config['CLEANED_UPLOADS_FOLDER']))
         # Check if the post request has the file part
         if 'file' not in request.files:
             return 'No file part'
